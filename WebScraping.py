@@ -161,8 +161,8 @@ class Scraping:
                 "//button[@id='agregarOtro']").click()
             adjunto = self.driver.find_element_by_xpath(
                 "//input[@id='agregarArchivo']")
-            adjunto.send_keys('/home/alan/Downloads/resultados/' +
-                              'membretados/' + self.fileName + '.pdf')
+            adjunto.send_keys(os.path.abspath(os.getcwd()) +
+                              '/membretados/' + self.fileName + '.pdf')
             buttons = self.driver.find_elements_by_xpath(
                 "//*[contains(text(), 'Guardar envio')]")
             for btn in buttons:

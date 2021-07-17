@@ -18,7 +18,7 @@ import smtplib
 import sys
 import urllib.request, urllib.parse, urllib.error
 import base64
-
+import os
 
 client_id = "664990419712-gpdfa298nnk95b8mivog32hafda7g79v.apps.googleusercontent.com"
 client_secret = "Yyj0Y6Un3lHO12XexQsl2K7c"
@@ -80,7 +80,7 @@ def send (receiver, filename, folio, nombre ):
     
     filename = filename + '.pdf'
     # Open PDF file in binary mode
-    with open("/home/alan/Downloads/resultados/membretados/" + filename , "rb") as attachment:
+    with open( os.path.abspath(os.getcwd()) + "/membretados/" + filename , "rb") as attachment:
         # Add file as application/octet-stream
         # Email client can usually download this automatically as attachment
         part = MIMEBase("application", "octet-stream")

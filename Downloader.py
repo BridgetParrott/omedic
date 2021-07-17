@@ -66,7 +66,7 @@ class Downloader:
             os.mkdir('adjuntos')
         else:
                         
-            for parent, dirnames, filenames in os.walk('/home/alan/Downloads/resultados/adjuntos'):
+            for parent, dirnames, filenames in os.walk(os.path.abspath( os.getcwd()) + '/adjuntos'):
                 for fn in filenames:
                     if fn.lower().endswith('.pdf'):
                         os.remove(os.path.join(parent, fn))
@@ -95,34 +95,36 @@ class Downloader:
     def getAttach (self):
         self.m.select(readonly=False)
         eliNumb = ['1', '14', '13', '01', '06', '08', '05', '04', '03', '012', '06']
-        for en in eliNumb:
-            res, data = self.m.search(None,'UNSEEN', 'FROM', '"resultados.eli' + en + '@resultadoseli.com"')
-            if res == "OK":
-                    # Iterating over all emails
-                for msgId in data[0].split():
-                    typ, messageParts = self.m.fetch(msgId, '(RFC822)')
-                    if typ != 'OK':
-                        print ('Error fetching mail.')
-                        raise
-            
-                    emailBody = messageParts[0][1]
-                    mail = email.message_from_bytes(emailBody)
-                    for part in mail.walk():
-                        if part.get_content_maintype() == 'multipart':
-                            # print part.as_string()
-                            continue
-                        if part.get('Content-Disposition') is None:
-                            # print part.as_string()
-                            continue
-                        fileName = part.get_filename()
-            
-                        if bool(fileName):
-                            filePath = os.path.join(self.detach_dir, 'adjuntos', fileName)
-                            if not os.path.isfile(filePath) :
-                                print (fileName)
-                                fp = open(filePath, 'wb')
-                                fp.write(part.get_payload(decode=True))
-                                fp.close()
+        domain = ['resultadoseli' , 'gmail']
+        for d in domain:
+            for en in eliNumb:
+                res, data = self.m.search(None,'UNSEEN', 'FROM', '"resultados.eli' + en + '@' + d + '.com"')
+                if res == "OK":
+                        # Iterating over all emails
+                    for msgId in data[0].split():
+                        typ, messageParts = self.m.fetch(msgId, '(RFC822)')
+                        if typ != 'OK':
+                            print ('Error fetching mail.')
+                            raise
+                
+                        emailBody = messageParts[0][1]
+                        mail = email.message_from_bytes(emailBody)
+                        for part in mail.walk():
+                            if part.get_content_maintype() == 'multipart':
+                                # print part.as_string()
+                                continue
+                            if part.get('Content-Disposition') is None:
+                                # print part.as_string()
+                                continue
+                            fileName = part.get_filename()
+                
+                            if bool(fileName):
+                                filePath = os.path.join(self.detach_dir, 'adjuntos', fileName)
+                                if not os.path.isfile(filePath) :
+                                    print (fileName)
+                                    fp = open(filePath, 'wb')
+                                    fp.write(part.get_payload(decode=True))
+                                    fp.close()
         self.m.close()
         self.m.logout()
     
