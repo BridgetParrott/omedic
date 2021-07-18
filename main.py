@@ -15,7 +15,7 @@ import re
 from WebScraping import *
 from Downloader import *
 import sys
-
+    
 
 
 ####    Download files from Eli
@@ -37,9 +37,13 @@ for fname in docs:
             text = pag.getText("text")
             words = text.split()
             allWords += words
-            edad = words[words.index('Edad') +  2]
-            folio = words[words.index('Paciente') +2]
-            name =   ' '.join([str(elem) for elem in words[words.index('Paciente')+3:words.index('RESULTADO')]])
+            edad = words[words.index('Edad') +  2] 
+            try:
+                folio = words[words.index('Paciente:') +1]
+                name =   ' '.join([str(elem) for elem in words[words.index('Paciente:')+2:words.index('RESULTADO')]])
+            except Exception:
+                folio = words[words.index('Paciente') +2]
+                name =   ' '.join([str(elem) for elem in words[words.index('Paciente')+3:words.index('RESULTADO')]])
             fileName = folio + '-' + name
             file_handle.save('membretados/' + fileName +'.pdf')  
         file_handle.close() 

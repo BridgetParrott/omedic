@@ -93,15 +93,18 @@ class Scraping:
         self.login()
         self.search()
         pxName = self.driver.find_element_by_xpath("//input[@name='nombre']")
-        if unidecode.unidecode(pxName.get_attribute('value')).lower() != unidecode.unidecode(self.name).lower():
-            print('\n \n Nombre del paciente incorrecto')
+        admiName = pxName.get_attribute('value')
+        if unidecode.unidecode(admiName).lower().split() != unidecode.unidecode(self.name).lower().split() :
+            print('\n \n Nombre del paciente incorrecto, debido a que en admin se tiene {} y en Eli se tiene {}'.format(unidecode.unidecode(admiName).lower(), unidecode.unidecode(self.name).lower()))
+            flagN = False
         else:
             flagN = True
 
         pxAge = self.driver.find_element_by_xpath("//input[@name='edad']")
 
         if pxAge.get_attribute('value') != self.edad:
-            print('\n \n Edad del paciente incorrecta')
+            print('\n \n Edad del paciente incorrecta, debido a que en admin se tiene {} y en Eli se tiene {} años '.format(pxAge.get_attribute('value'), self.edad))
+            flagE = False
         else:
             flagE = True
 
@@ -137,17 +140,21 @@ class Scraping:
             else:
                 flag = False
                 for ix in indices:
-                    if set(wordsUni[ix: ix + len(est)]) == set(est):
+                    wordsEqual = sum([e1 == e2 for e1 in wordsUni[ix: ix + len(est)] for e2 in est])
+                    if  wordsEqual >=  round(len(lab) * .66) :
                         flag = True
                 count += flag
                 if flag == False:
                     print('\n \n No se encontró el estudio de {}'.format(
                         ' '.join(est)))
+                    
         if count == len(lab):
             flagL = True
-
-        print('\n \n La edad, el nombre y los estudios son correctos')
-
+        else:
+            flagL = False
+        if flagL and flagE and flagN == True:
+            print('\n \n La edad, el nombre y los estudios son correctos')
+            
         resp = input(
             " \n ¿Gusta enviar el resultado del folio {}? \n  Si (s) / No (n) : ".format(self.folio))
         if resp.lower() == 's':
