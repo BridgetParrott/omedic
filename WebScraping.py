@@ -110,13 +110,13 @@ class Scraping:
 
         rws = self.driver.find_elements_by_xpath("//table/tbody/tr")
         r = len(rws)
-        # to get column count of table
+            # to get column count of table
         cols = self.driver.find_elements_by_xpath("//table/tbody/tr[1]/td")
         # len method is used to get the size of that list
         c = len(cols)
         elemt = []
         # iterate over the rows
-        for i in range(r - 1):
+        for i in range(r - 3):
             row = []
         # iterate over the columns
             for j in range(c):
@@ -126,6 +126,7 @@ class Scraping:
                 row.append(d)
         # finally store and print the list in console
             elemt.append(row)
+        #print (elemt)
         lab = [study[1] for study in elemt if study[2] == 'Laboratorios' and study[1].split(
         )[0] != 'Equipo' and study[1].split()[0] != 'Zona']
         count = 0
@@ -141,13 +142,13 @@ class Scraping:
             for ix in indices:
                 labs = wordsUni[ix: ix + len(est)]
                 wordsEqual = sum([e1 == e2 for e1 in labs for e2 in est])
-                print(wordsEqual)
-                print (len(est))
+                #print(wordsEqual)
+                #print (len(est))
                 if len(est) >= 3:
                     if  wordsEqual >=  round(len(est) * .75) :
                         flag = True
                 else:
-                    print ( labs, est)
+                   # print ( labs, est)
                     if set(labs) == set (est):
                         flag = True
             count += flag
@@ -161,8 +162,8 @@ class Scraping:
             flagL = False
         if flagL and flagE and flagN == True:
             print('\n \n La edad, el nombre y los estudios son correctos')
-        for l in lab:
-            print (l)
+       # for l in lab:
+        #    print (l)
         resp = input(
             " \n ¿Gusta enviar el resultado del folio {}? \n  Si (s) / No (n) : ".format(self.folio))
         if resp.lower() == 's':
