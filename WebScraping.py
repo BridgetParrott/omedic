@@ -116,7 +116,7 @@ class Scraping:
         c = len(cols)
         elemt = []
         # iterate over the rows
-        for i in range(r - 3):
+        for i in range(r - 1):
             row = []
         # iterate over the columns
             for j in range(c):
@@ -137,16 +137,23 @@ class Scraping:
             except ValueError:
                 print(
                     "\n \n No se encontro ningún estudio con la palabra {}".format(est[0]))
-            else:
-                flag = False
-                for ix in indices:
-                    wordsEqual = sum([e1 == e2 for e1 in wordsUni[ix: ix + len(est)] for e2 in est])
-                    if  wordsEqual >=  round(len(lab) * .66) :
+            flag = False
+            for ix in indices:
+                labs = wordsUni[ix: ix + len(est)]
+                wordsEqual = sum([e1 == e2 for e1 in labs for e2 in est])
+                print(wordsEqual)
+                print (len(est))
+                if len(est) >= 3:
+                    if  wordsEqual >=  round(len(est) * .75) :
                         flag = True
-                count += flag
-                if flag == False:
-                    print('\n \n No se encontró el estudio de {}'.format(
-                        ' '.join(est)))
+                else:
+                    print ( labs, est)
+                    if set(labs) == set (est):
+                        flag = True
+            count += flag
+            if flag == False:
+                print('\n \n No se encontró el estudio de {}'.format(
+                    ' '.join(est)))
                     
         if count == len(lab):
             flagL = True
@@ -154,7 +161,8 @@ class Scraping:
             flagL = False
         if flagL and flagE and flagN == True:
             print('\n \n La edad, el nombre y los estudios son correctos')
-            
+        for l in lab:
+            print (l)
         resp = input(
             " \n ¿Gusta enviar el resultado del folio {}? \n  Si (s) / No (n) : ".format(self.folio))
         if resp.lower() == 's':
