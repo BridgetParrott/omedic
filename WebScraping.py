@@ -99,7 +99,10 @@ class Scraping:
             flagN = False
         else:
             flagN = True
-
+        
+        cupon = self.driver.find_element_by_xpath("//select[@name='cupon']")
+        cuponVal = cupon.get_attribute('value')
+        
         pxAge = self.driver.find_element_by_xpath("//input[@name='edad']")
 
         if pxAge.get_attribute('value') != self.edad:
@@ -115,8 +118,14 @@ class Scraping:
         # len method is used to get the size of that list
         c = len(cols)
         elemt = []
+        
+        if len(cuponVal) == 0:
+            lr = r-2
+        else:
+            lr = r-3
+        
         # iterate over the rows
-        for i in range(r - 3):
+        for i in range(lr):
             row = []
         # iterate over the columns
             for j in range(c):
@@ -184,3 +193,4 @@ class Scraping:
             for btn in buttons:
                 btn.click()
         self.driver.close()
+        
